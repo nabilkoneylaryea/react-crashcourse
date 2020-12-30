@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import React from 'react';
-import { v4 as uuid } from 'uuid';
+// import { v4 as uuid } from 'uuid';
 import './App.css';
 import Todos from './components/Todos.js';
 import Header from './components/layout/Header';
@@ -48,18 +48,24 @@ class App extends Component {
 
   // DELETE TODO
   delTodo = (id) => {
-    this.setState({todos: [...this.state.todos.filter(todo => todo.id !== id)]});
+    axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+      .then(res => this.setState({ todos: [...this.state.todos.filter(todo => todo.id !== id)] }));
   }
   
   // ADD TODO
   addTodo = (title) => {
     // console.log(title);
-    const newTodo = {
-      id: uuid(),
+    // const newTodo = {
+    //   id: uuid(),
+    //   title,
+    //   completed: false
+    // }
+    axios.post('https://jsonplaceholder.typicode.com/todos?_limit=10', {
       title,
       completed: false
-    }
-    this.setState({todos: [...this.state.todos, newTodo]})
+    })
+      .then(res => this.setState({ todos: [...this.state.todos, res.data] }));
+    
   }
 
   render(){
